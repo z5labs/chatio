@@ -3,7 +3,7 @@
     <div style="flex: 1 1 auto">
       <q-scroll-area class="fit">
         <q-list padding separator>
-          <q-item v-for="message in messages" :key="message.timestamp">
+          <q-item v-for="message in messages" :key="message.created">
             <q-item-section>
               <q-item-label>{{ message.user }}</q-item-label>
               <q-item-label caption lines="2">{{ message.body }}</q-item-label>
@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
-import { Message } from 'src/components/model';
+import { Message } from 'src/components/chat';
 
 export default defineComponent({
   name: 'Chat',

@@ -46,8 +46,9 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent, ref, Ref } from 'vue';
-import { Message } from 'src/components/model';
+import { defineAsyncComponent, defineComponent, ref, Ref, onUnmounted } from 'vue';
+import Libp2p from 'libp2p';
+import { connect, Message } from 'src/components/chat';
 
 export default defineComponent({
   name: 'CallLayout',
@@ -65,24 +66,36 @@ export default defineComponent({
       type: String,
     }
   },
-  setup() {
-    const node: Ref<Record<string, unknown> | null> = ref(null);
+  setup(props) {
+    const topic = `/chatio/${props.id}/chat/1.0.0`;
+
+    const libp2p: Ref<Libp2p | null> = ref(null);
     const audio = ref(false);
     const video = ref(false);
     const showChat = ref(false);
-    const messages = ref<Message[]>([]);
 
-    const setNode = (n: Record<string, unknown>) => node.value = n;
+    const setNode = (n: Libp2p) => libp2p.value = n;
 
-    const sendMessage = (body: string) => {
-      const timestamp = Date.now();
+    const { messages, send, disconnect } = connect(libp2p, topic);
 
-      messages.value.push({
+    const sendMessage = async (body: string) => {
+      const created = Date.now();
+
+      const msg: Message = {
         user: 'Me',
         body,
-        timestamp
-      })
+        created
+      };
+
+      messages.value.push(msg);
+
+      await send(msg);
     };
+
+
+    onUnmounted(() => {
+      disconnect();
+    });
 
     return {
       audio,
