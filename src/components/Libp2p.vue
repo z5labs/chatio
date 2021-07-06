@@ -3,18 +3,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
+import { useStore } from 'src/store';
+import { createLibp2p } from 'src/components/libp2p';
 
 export default defineComponent({
   name: 'Libp2p',
   emits: ['node'],
   async setup(_props, { emit }) {
-    const node = ref({});
+    const store = useStore();
 
-    await new Promise(resolve => setTimeout(() => {
-      resolve(null);
-      emit('node', {});
-    }, 5000));
+    const node = await createLibp2p(store.state.libp2p);
+
+    emit('node', node);
 
     return {
       node
