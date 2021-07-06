@@ -6,39 +6,70 @@ import {
   useStore as vuexUseStore,
 } from 'vuex'
 
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
+import PeerId, { create, createFromJSON, JSONPeerId } from 'peer-id';
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
- */
+export interface DHT {
+  enabled: boolean;
+  randomWalk: boolean;
+}
 
-export interface StateInterface {
-  // Define your own store structure, using submodules if needed
-  // example: ExampleStateInterface;
-  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown
+export interface Config {
+  peerId: PeerId,
+  signalAddrs: string[];
+  bootstrapAddrs: string[];
+  dht: DHT;
+}
+
+export interface State {
+  libp2p: Config
 }
 
 // provide typings for `this.$store`
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $store: VuexStore<StateInterface>
+    $store: VuexStore<State>
   }
 }
 
 // provide typings for `useStore` helper
-export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key')
+export const storeKey: InjectionKey<VuexStore<State>> = Symbol('vuex-key')
 
-export default store(function (/* { ssrContext } */) {
-  const Store = createStore<StateInterface>({
-    modules: {
-      // example
+async function getOrCreatePeerId() {
+  const storedId = localStorage.getItem('peerId');
+  if (storedId != null) {
+    const peerId = JSON.parse(storedId) as JSONPeerId;
+    return await createFromJSON(peerId);
+  }
+
+  console.info('Could not get the stored peer id, a new one will be generated');
+  const peerId = await create();
+  console.info('Storing our peer id in local storage so it can be reused');
+  // eslint-disable-next-line
+  localStorage.setItem('peerId', JSON.stringify(peerId.toJSON()));
+
+  return peerId;
+}
+
+export default store(async function (/* { ssrContext } */) {
+  const peerId = await getOrCreatePeerId();
+
+  const Store = createStore<State>({
+    state: {
+      libp2p: {
+        peerId,
+        signalAddrs: ['/ip4/127.0.0.1/tcp/9090/wss/p2p-webrtc-star'],
+        bootstrapAddrs: [
+          '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
+            '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
+            '/dnsaddr/bootstrap.libp2p.io/p2p/QmZa1sAxajnQjVM8WjWXoMbmPd7NsWhfKsPkErzpm9wGkp',
+            '/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
+            '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
+        ],
+        dht: {
+          enabled: true,
+          randomWalk: true,
+        }
+      }
     },
 
     // enable strict mode (adds overhead!)

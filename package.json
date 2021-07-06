@@ -11,7 +11,18 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "buffer": "^6.0.3",
     "core-js": "^3.6.5",
+    "libp2p": "^0.31.7",
+    "libp2p-bootstrap": "^0.12.3",
+    "libp2p-gossipsub": "^0.10.0",
+    "libp2p-kad-dht": "^0.22.0",
+    "libp2p-mplex": "^0.10.3",
+    "libp2p-noise": "^3.0.0",
+    "libp2p-webrtc-star": "^0.22.4",
+    "libp2p-websockets": "^0.15.9",
+    "peer-id": "^0.14.8",
+    "process": "^0.11.10",
     "quasar": "^2.0.0",
     "vue-i18n": "^9.0.0-beta.0",
     "vuex": "^4.0.1"
