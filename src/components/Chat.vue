@@ -17,7 +17,7 @@
 
     <q-input @keyup.enter="sendMessage" v-model="message" placeholder="Type here...">
       <template v-slot:append>
-        <q-icon @click="sendMessage" name="send" color="primary" />
+        <q-icon @click="sendMessage" name="send" :color="message.trim() === '' ? '' : 'primary'" />
       </template>
     </q-input>
   </div>
@@ -25,12 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
-
-export interface Message {
-  user: string;
-  body: string;
-  timestamp: number;
-}
+import { Message } from 'src/components/model';
 
 export default defineComponent({
   name: 'Chat',
@@ -45,7 +40,12 @@ export default defineComponent({
     const message = ref('');
 
     const sendMessage = () => {
-      emit('message', message.value);
+      const msg = message.value.trim();
+      if (msg === '') {
+        message.value = '';
+        return;
+      }
+      emit('message', msg);
       message.value = '';
     };
 
