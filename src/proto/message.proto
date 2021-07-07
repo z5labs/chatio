@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package chatio;
+
+message Message {
+  string user = 1;
+  bytes  body = 2;
+  uint64 created = 3;
+}
