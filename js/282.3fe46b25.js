@@ -1,0 +1,1 @@
+(self["webpackChunkchatio"]=self["webpackChunkchatio"]||[]).push([[282],{7282:(e,t,n)=>{"use strict";function r(e,t,n,r,a,c){return" Hello "}n.r(t),n.d(t,{default:()=>s});var a=n(83673);const c=(0,a.aZ)({name:"Call",props:{node:{type:Object}},setup(){return{}}});c.render=r;const s=c}}]);
