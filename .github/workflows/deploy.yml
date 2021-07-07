@@ -10,27 +10,28 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
 
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
       - name: Cache dependencies
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+        id: yarn-cache
         with:
-          # yarn cache files are stored in `~/.cache/yarn` on Linux/macOS
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies🔧
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
-          yarn global add @quasar/cli
           yarn install --frozen-lockfile
 
       - name: Build
         run: |
           export PATH="$(yarn global bin):$PATH"
+          yarn global add @quasar/cli
           quasar build
 
       - name: Deploy 🚀
