@@ -29,7 +29,9 @@ jobs:
           yarn install --frozen-lockfile
 
       - name: Build
-        run: quasar build
+        run: |
+          export PATH="$(yarn global bin):$PATH"
+          quasar build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
