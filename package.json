@@ -14,7 +14,6 @@
     "buffer": "^6.0.3",
     "core-js": "^3.6.5",
     "libp2p": "^0.31.7",
-    "libp2p-bootstrap": "^0.12.3",
     "libp2p-gossipsub": "^0.10.0",
     "libp2p-kad-dht": "^0.22.0",
     "libp2p-mplex": "^0.10.3",
