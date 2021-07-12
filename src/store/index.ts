@@ -16,7 +16,6 @@ export interface DHT {
 export interface Config {
   peerId: PeerId,
   signalAddrs: string[];
-  bootstrapAddrs: string[];
   dht: DHT;
 }
 
@@ -57,14 +56,7 @@ export default store(async function (/* { ssrContext } */) {
     state: {
       libp2p: {
         peerId,
-        signalAddrs: ['/ip4/127.0.0.1/tcp/9090/wss/p2p-webrtc-star'],
-        bootstrapAddrs: [
-          '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
-            '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
-            '/dnsaddr/bootstrap.libp2p.io/p2p/QmZa1sAxajnQjVM8WjWXoMbmPd7NsWhfKsPkErzpm9wGkp',
-            '/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
-            '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
-        ],
+        signalAddrs: [process.env.STAR_SIGNAL],
         dht: {
           enabled: true,
           randomWalk: true,

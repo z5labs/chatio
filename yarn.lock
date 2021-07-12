@@ -5475,16 +5475,6 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libp2p-bootstrap@^0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/libp2p-bootstrap/-/libp2p-bootstrap-0.12.3.tgz#016b955e762410a759a0704d91350f62cc016778"
-  integrity sha512-4S7+YyZYy8wRmNxXGwsBsKrxGMk59nTqwDdBeEf9m3aVWZ0zdz5uu3WXq7sl8ULb703Zx5IdjGDrdbxhYtdqlA==
-  dependencies:
-    debug "^4.3.1"
-    mafmt "^9.0.0"
-    multiaddr "^9.0.1"
-    peer-id "^0.14.0"
-
 libp2p-crypto@^0.19.0, libp2p-crypto@^0.19.4:
   version "0.19.4"
   resolved "https://registry.yarnpkg.com/libp2p-crypto/-/libp2p-crypto-0.19.4.tgz#90603a1318e903fbf142db3124ff3b2a1ba07ec7"
@@ -6884,7 +6874,7 @@ pathval@^1.1.1:
   resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.1.tgz#8534e77a77ce7ac5a2512ea21e0fdb8fcf6c3d8d"
   integrity sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==
 
-peer-id@^0.14.0, peer-id@^0.14.2, peer-id@^0.14.3, peer-id@^0.14.8:
+peer-id@^0.14.2, peer-id@^0.14.3, peer-id@^0.14.8:
   version "0.14.8"
   resolved "https://registry.yarnpkg.com/peer-id/-/peer-id-0.14.8.tgz#667c6bedc8ab313c81376f6aca0baa2140266fab"
   integrity sha512-GpuLpob/9FrEFvyZrKKsISEkaBYsON2u0WtiawLHj1ii6ewkoeRiSDFLyIefYhw0jGvQoeoZS05jaT52X7Bvig==

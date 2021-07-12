@@ -55,6 +55,9 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
+      env: {
+        STAR_SIGNAL: process.env.STAR_SIGNAL || '/dns4/webrtc-star-signal-qtqc6lsoaa-uc.a.run.app/tcp/443/wss/p2p-webrtc-star',
+      },
 
       // transpile: false,
 
