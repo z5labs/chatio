@@ -46,7 +46,8 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent, ref, Ref, onUnmounted } from 'vue';
+import { computed, defineAsyncComponent, defineComponent, ref, Ref, onUnmounted } from 'vue';
+import { useStore } from 'src/store';
 import Libp2p from 'libp2p';
 import { connect, Message } from 'src/components/chat';
 
@@ -67,6 +68,10 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const store = useStore();
+
+    const username = computed(() => store.state.username);
+
     const topic = `/chatio/${props.id}/chat/1.0.0`;
 
     const libp2p: Ref<Libp2p | null> = ref(null);
@@ -82,7 +87,7 @@ export default defineComponent({
       const created = Date.now();
 
       const msg: Message = {
-        user: 'Me',
+        user: username.value,
         body,
         created
       };
