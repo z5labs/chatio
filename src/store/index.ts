@@ -14,13 +14,14 @@ export interface DHT {
 }
 
 export interface Config {
-  peerId: PeerId,
+  peerId: PeerId;
   signalAddrs: string[];
   dht: DHT;
 }
 
 export interface State {
-  libp2p: Config
+  username: string;
+  libp2p: Config;
 }
 
 // provide typings for `this.$store`
@@ -54,6 +55,7 @@ export default store(async function (/* { ssrContext } */) {
 
   const Store = createStore<State>({
     state: {
+      username: peerId.toB58String(),
       libp2p: {
         peerId,
         signalAddrs: [process.env.STAR_SIGNAL],
