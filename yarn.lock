@@ -5283,6 +5283,11 @@ jest-worker@^27.0.2:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
+jose@^3.14.0:
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-3.14.0.tgz#935dce329af54586441ef74b0362fac7d1225c57"
+  integrity sha512-Hk4yFVGiSTuryL0XVyRTCvCPoD9eDCvEX/t+SpHTXXeNXsoxyopPLhoCLTt90vnu7yeIYXDdJWHNgI3Ix4H1FQ==
+
 js-sha3@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
