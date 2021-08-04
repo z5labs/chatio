@@ -1,12 +1,5 @@
 <template>
-  <q-btn
-    @click="prompt"
-    class="absolute-top-left"
-    label="Invite"
-    color="primary"
-    style="z-index: 7;"
-    flat
-  />
+  <slot :prompt="prompt"></slot>
 </template>
 
 <script lang="ts">
