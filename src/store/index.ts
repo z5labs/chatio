@@ -19,8 +19,13 @@ export interface Config {
   dht: DHT;
 }
 
+export interface Notifications {
+  appearOnChatMessage: boolean;
+}
+
 export interface State {
   username: string;
+  notifications: Notifications;
   libp2p: Config;
 }
 
@@ -56,6 +61,9 @@ export default store(async function (/* { ssrContext } */) {
   const Store = createStore<State>({
     state: {
       username: peerId.toB58String(),
+      notifications: {
+        appearOnChatMessage: true
+      },
       libp2p: {
         peerId,
         signalAddrs: [process.env.STAR_SIGNAL],
