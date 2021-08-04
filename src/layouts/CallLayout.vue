@@ -38,7 +38,8 @@
         </div>
 
         <div class="absolute-right column justify-end items-end" style="z-index: 2">
-          <q-btn icon-right="people" :label="iconOnly ? '' : 'Participants'" flat />
+          <q-btn @click="toggleParticipants" icon-right="people" :label="iconOnly ? '' : 'Participants'" flat />
+
           <q-btn @click="toggleChat" icon-right="message" :label="iconOnly ? '' : 'Chat'" flat>
             <q-badge v-if="missedMessages > 0" color="red" floating>{{ missedMessages }}</q-badge>
           </q-btn>
@@ -49,12 +50,14 @@
     </q-page-container>
 
     <q-drawer
-      v-model="showChat"
+      v-model="openDrawer"
       side="right"
       :width="300"
       :breakpoint="500"
     >
-      <Chat @message="sendMessage" :messages="messages" />
+      <Chat v-if="viewChat" @message="sendMessage" :messages="messages" />
+
+      <Participants v-if="viewParticipants" :participants="participants" />
     </q-drawer>
   </q-layout>
 </template>
@@ -63,6 +66,7 @@
 import { computed, defineAsyncComponent, defineComponent, ref, onUnmounted, inject } from 'vue';
 import { useStore } from 'src/store';
 import Libp2p from 'libp2p';
+import { watchParticipants } from 'src/components/call';
 import { subscribe, Message } from 'src/components/chat';
 import InviteButton from 'src/components/InviteButton.vue';
 import { useQuasar } from 'quasar';
@@ -73,6 +77,7 @@ export default defineComponent({
     InviteButton,
     Call: defineAsyncComponent(() => import('components/Call.vue')),
     Chat: defineAsyncComponent(() => import('components/Chat.vue')),
+    Participants: defineAsyncComponent(() => import('components/Participants.vue')),
   },
   props: {
     id: {
@@ -92,8 +97,12 @@ export default defineComponent({
     const node = inject('node') as Libp2p;
     const muted = ref(false);
     const streaming = ref(false);
-    const showChat = ref(false);
+    const viewChat = ref(false);
+    const viewParticipants = ref(false);
+    const openDrawer = computed(() => viewChat.value || viewParticipants.value);
     const iconOnly = computed(() => $q.screen.lt.md);
+
+    const participants = watchParticipants(node);
 
     const messages = ref<Message[]>([]);
     const missedMessages = ref(0);
@@ -103,14 +112,20 @@ export default defineComponent({
     const toggleVideo = () => streaming.value = !streaming.value;
 
     const toggleChat = () => {
-      showChat.value = !showChat.value;
+      viewChat.value = !viewChat.value;
+      viewParticipants.value = false;
       missedMessages.value = 0;
+    };
+
+    const toggleParticipants = () => {
+      viewParticipants.value = !viewParticipants.value;
+      viewChat.value = false;
     };
 
     const { publish, unsubscribe } = subscribe(node, {callId: props.id, signingKey: ''}, msg => {
       messages.value.push(msg);
 
-      if (showChat.value || !store.state.notifications.appearOnChatMessage) return;
+      if (viewChat.value || !store.state.notifications.appearOnChatMessage) return;
 
       missedMessages.value += 1;
       $q.notify({
@@ -149,8 +164,12 @@ export default defineComponent({
       streaming,
       toggleMic,
       toggleVideo,
-      showChat,
+      viewChat,
+      viewParticipants,
+      openDrawer,
+      toggleParticipants,
       toggleChat,
+      participants,
       missedMessages,
       messages,
       sendMessage,
