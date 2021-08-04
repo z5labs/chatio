@@ -25,7 +25,9 @@
         <q-space />
 
         <q-btn icon="people" label="Participants" flat />
-        <q-btn @click="showChat = !showChat" icon="message" label="Chat" flat />
+        <q-btn @click="toggleChat" icon="message" label="Chat" flat>
+          <q-badge v-if="missedMessages > 0" color="red" floating>{{ missedMessages }}</q-badge>
+        </q-btn>
       </q-toolbar>
     </q-footer>
   </q-layout>
@@ -37,6 +39,7 @@ import { useStore } from 'src/store';
 import Libp2p from 'libp2p';
 import { subscribe, Message } from 'src/components/chat';
 import InviteButton from 'src/components/InviteButton.vue';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'CallLayout',
@@ -55,6 +58,7 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const $q = useQuasar();
     const store = useStore();
 
     const username = computed(() => store.state.username);
@@ -65,8 +69,30 @@ export default defineComponent({
     const showChat = ref(false);
 
     const messages = ref<Message[]>([]);
+    const missedMessages = ref(0);
 
-    const { publish, unsubscribe } = subscribe(node, {callId: props.id, signingKey: ''}, msg => messages.value.push(msg));
+    const toggleChat = () => {
+      showChat.value = !showChat.value;
+      missedMessages.value = 0;
+    };
+
+    const { publish, unsubscribe } = subscribe(node, {callId: props.id, signingKey: ''}, msg => {
+      messages.value.push(msg);
+
+      if (showChat.value || !store.state.notifications.appearOnChatMessage) return;
+
+      missedMessages.value += 1;
+      $q.notify({
+        group: 'chat',
+        position: 'top',
+        icon: 'message',
+        message: msg.body,
+        actions: [
+          { label: 'Respond', handler: toggleChat },
+          { label: 'Dismiss' },
+        ],
+      });
+    });
 
     const sendMessage = async (body: string) => {
       const created = Date.now();
@@ -90,6 +116,8 @@ export default defineComponent({
       audio,
       video,
       showChat,
+      toggleChat,
+      missedMessages,
       messages,
       sendMessage,
       prompt
