@@ -14,7 +14,7 @@ const log = debug('chatio:peer');
 
 const transportKey = Websockets.prototype[Symbol.toStringTag];
 
-export const createLibp2p = async (config) => {
+export const startLibp2p = async (config) => {
   const node = await Libp2p.create({
     peerId: config.peerId,
     addresses: {

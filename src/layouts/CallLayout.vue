@@ -1,23 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-page-container>
-      <q-page class="row items-center justify-center">
-        <Suspense>
-          <template #default>
-            <Libp2p @node="setNode">
-              <template v-slot="{ node }">
-                <Call :node="node" />
-              </template>
-            </Libp2p>
-          </template>
-
-          <template #fallback>
-            <q-spinner
-              color="primary"
-              size="3em"
-            />
-          </template>
-        </Suspense>
+      <q-page>
+        <InviteButton :callId="id"/>
+        <Call />
       </q-page>
     </q-page-container>
 
@@ -46,17 +32,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent, defineComponent, ref, Ref, onUnmounted } from 'vue';
+import { computed, defineAsyncComponent, defineComponent, ref, onUnmounted, inject } from 'vue';
 import { useStore } from 'src/store';
 import Libp2p from 'libp2p';
-import { connect, Message } from 'src/components/chat';
+import { subscribe, Message } from 'src/components/chat';
+import InviteButton from 'src/components/InviteButton.vue';
 
 export default defineComponent({
   name: 'CallLayout',
   components: {
-    Libp2p: defineAsyncComponent(() => import('components/Libp2p.vue')),
+    InviteButton,
     Call: defineAsyncComponent(() => import('components/Call.vue')),
-    Chat: defineAsyncComponent(() => import('components/Chat.vue'))
+    Chat: defineAsyncComponent(() => import('components/Chat.vue')),
   },
   props: {
     id: {
@@ -72,16 +59,14 @@ export default defineComponent({
 
     const username = computed(() => store.state.username);
 
-    const topic = `/chatio/${props.id}/chat/1.0.0`;
-
-    const libp2p: Ref<Libp2p | null> = ref(null);
+    const node = inject('node') as Libp2p;
     const audio = ref(false);
     const video = ref(false);
     const showChat = ref(false);
 
-    const setNode = (n: Libp2p) => libp2p.value = n;
+    const messages = ref<Message[]>([]);
 
-    const { messages, send, disconnect } = connect(libp2p, topic);
+    const { publish, unsubscribe } = subscribe(node, {callId: props.id, signingKey: ''}, msg => messages.value.push(msg));
 
     const sendMessage = async (body: string) => {
       const created = Date.now();
@@ -94,12 +79,11 @@ export default defineComponent({
 
       messages.value.push(msg);
 
-      await send(msg);
+      await publish(msg);
     };
 
-
     onUnmounted(() => {
-      disconnect();
+      unsubscribe();
     });
 
     return {
@@ -108,10 +92,16 @@ export default defineComponent({
       showChat,
       messages,
       sendMessage,
-      setNode,
+      prompt
     };
   }
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.call-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+</style>
