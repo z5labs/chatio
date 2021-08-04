@@ -2,7 +2,48 @@
   <q-layout view="lHh Lpr lFf">
     <q-page-container>
       <q-page>
-        <InviteButton :callId="id"/>
+        <div class="absolute-left column justify-end items-start" style="z-index: 2">
+          <InviteButton :callId="id">
+            <template v-slot="{ prompt }">
+              <q-btn
+                @click="prompt"
+                icon="person_add"
+                :label="iconOnly ? '' : 'Invite'"
+                flat
+              />
+            </template>
+          </InviteButton>
+
+          <q-btn
+            @click="toggleMic"
+            :icon="muted ? 'mic_off' : 'mic'"
+            :label="iconOnly ? '' : 'Audio'"
+            flat
+          >
+            <q-tooltip anchor="center right" self="center left">
+              {{ muted ? 'Unmute' : 'Mute' }}
+            </q-tooltip>
+          </q-btn>
+
+          <q-btn
+            @click="toggleVideo"
+            :icon="streaming ? 'videocam' : 'videocam_off'"
+            :label="iconOnly ? '' : 'Video'"
+            flat
+          >
+            <q-tooltip anchor="center right" self="center left">
+              {{ streaming ? 'Disable' : 'Enable' }}
+            </q-tooltip>
+          </q-btn>
+        </div>
+
+        <div class="absolute-right column justify-end items-end" style="z-index: 2">
+          <q-btn icon-right="people" :label="iconOnly ? '' : 'Participants'" flat />
+          <q-btn @click="toggleChat" icon-right="message" :label="iconOnly ? '' : 'Chat'" flat>
+            <q-badge v-if="missedMessages > 0" color="red" floating>{{ missedMessages }}</q-badge>
+          </q-btn>
+        </div>
+
         <Call />
       </q-page>
     </q-page-container>
@@ -12,24 +53,9 @@
       side="right"
       :width="300"
       :breakpoint="500"
-      elevated
     >
       <Chat @message="sendMessage" :messages="messages" />
     </q-drawer>
-
-    <q-footer bordered class="bg-black text-primary">
-      <q-toolbar>
-        <q-checkbox v-model="audio" label="Audio" color="primary" keep-color />
-        <q-checkbox v-model="video" label="Video" color="primary" keep-color />
-
-        <q-space />
-
-        <q-btn icon="people" label="Participants" flat />
-        <q-btn @click="toggleChat" icon="message" label="Chat" flat>
-          <q-badge v-if="missedMessages > 0" color="red" floating>{{ missedMessages }}</q-badge>
-        </q-btn>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 
@@ -64,12 +90,17 @@ export default defineComponent({
     const username = computed(() => store.state.username);
 
     const node = inject('node') as Libp2p;
-    const audio = ref(false);
-    const video = ref(false);
+    const muted = ref(false);
+    const streaming = ref(false);
     const showChat = ref(false);
+    const iconOnly = computed(() => $q.screen.lt.md);
 
     const messages = ref<Message[]>([]);
     const missedMessages = ref(0);
+
+    const toggleMic = () => muted.value = !muted.value;
+
+    const toggleVideo = () => streaming.value = !streaming.value;
 
     const toggleChat = () => {
       showChat.value = !showChat.value;
@@ -113,8 +144,11 @@ export default defineComponent({
     });
 
     return {
-      audio,
-      video,
+      iconOnly,
+      muted,
+      streaming,
+      toggleMic,
+      toggleVideo,
       showChat,
       toggleChat,
       missedMessages,
