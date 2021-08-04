@@ -2,6 +2,31 @@ import PeerId from 'peer-id';
 import { SignJWT } from 'jose/jwt/sign';
 import { CompactEncrypt } from 'jose/jwe/compact/encrypt';
 import { KeyLike, JWTPayload } from 'jose/types';
+import Libp2p, { Connection } from 'libp2p';
+import { ref } from 'vue';
+
+export interface Participant {
+  id: PeerId
+}
+
+export const watchParticipants = (node: Libp2p) => {
+  const participants = ref<Participant[]>([]);
+
+  node.peerStore.on('peer', (peer: PeerId) => {
+    const peers = participants.value.map(p => p.id);
+    if (peers.includes(peer)) return;
+
+    participants.value.push({ id: peer });
+  });
+
+  node.connectionManager.on('peer:disconnect', (conn: Connection) => {
+    const rid = conn.remotePeer.toB58String();
+
+    participants.value = participants.value.filter(p => p.id.toB58String() !== rid);
+  });
+
+  return participants;
+};
 
 // Config used for a call.
 export interface Config {
@@ -38,7 +63,8 @@ export const generateInvite = (config: Config, host: PeerId, ...options: Option[
 export const encodeInviteToken = async (host: PeerId, invite: Invite, key: KeyLike) => {
   const signingKey = await crypto.subtle.importKey(
     'jwk',
-    host.privKey._key,
+    // eslint-disable-next-line
+    (host.privKey as any)._key,
     {
       name: 'RSASSA-PKCS1-v1_5',
       hash: 'SHA-256',
