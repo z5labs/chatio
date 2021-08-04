@@ -1,7 +1,7 @@
 import PeerId from 'peer-id';
-import { EncryptJWT } from 'jose/jwt/encrypt';
+import { SignJWT } from 'jose/jwt/sign';
+import { CompactEncrypt } from 'jose/jwe/compact/encrypt';
 import { KeyLike, JWTPayload } from 'jose/types';
-import { fromKeyLike } from 'jose/jwk/from_key_like';
 
 // Config used for a call.
 export interface Config {
@@ -13,22 +13,45 @@ export interface Config {
 }
 
 // Invite is an encrypted JSON Web Token.
-export type Invite = EncryptJWT;
+export type Invite = SignJWT;
+
+export type Option = (invite: Invite) => Invite;
+
+export const intendedFor = (aud: string) => (invite: Invite) => invite.setAudience(aud);
+
+export const expiresIn = (exp: number) => (invite: Invite) => invite.setExpirationTime(exp);
+
+export const validAfter = (time: number) => (invite: Invite) => invite.setNotBefore(time);
 
 // Generate a new Invite token with an optional expiration time.
-export const generateInvite = (config: Config, hostId: PeerId, expiresIn?: number): Invite => {
-  const tok = new EncryptJWT((config as unknown) as JWTPayload).setIssuer(hostId.toB58String());
+export const generateInvite = (config: Config, host: PeerId, ...options: Option[]): Invite => {
+  const tok = new SignJWT((config as unknown) as JWTPayload)
+    .setIssuedAt()
+    .setIssuer(host.toB58String());
 
-  return !expiresIn ? tok : tok.setExpirationTime(Date.now() + expiresIn);
+  if (!options) return tok;
+
+  return options.reduce((invite, opt) => opt(invite), tok);
 }
 
-// Base64 encode the invite token so it can be used in URLs.
-export const encodeInviteToken = async (invite: Invite, key: KeyLike) => {
-  const secret = await fromKeyLike(key);
+// Encode and sign Invite token.
+export const encodeInviteToken = async (host: PeerId, invite: Invite, key: KeyLike) => {
+  const signingKey = await crypto.subtle.importKey(
+    'jwk',
+    host.privKey._key,
+    {
+      name: 'RSASSA-PKCS1-v1_5',
+      hash: 'SHA-256',
+    },
+    true,
+    ['sign']
+  );
+  const tok = await invite
+                    .setProtectedHeader({ alg: 'RS256' })
+                    .sign(signingKey);
 
-  // TODO: extract header params from secret key
-  return await invite
-    .setProtectedHeader({ alg: secret.alg })
-    .setIssuedAt()
-    .encrypt(secret);
+  const enc = new TextEncoder();
+  return await new CompactEncrypt(enc.encode(tok))
+    .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+    .encrypt(key);
 };
