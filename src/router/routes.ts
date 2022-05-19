@@ -5,28 +5,21 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') },
-      {
-        // TODO: Support /join?id=... links by redirecting straight to call
-        path: 'join',
-        component: () => import('pages/Join.vue')
-      },
-      { path: 'start', component: () => import('pages/Start.vue') },
+      { path: '', component: () => import('pages/IndexPage.vue') },
+      { path: 'new', component: () => import('pages/StartCall.vue') },
     ],
   },
   {
     path: '/call',
     component: () => import('layouts/CallLayout.vue'),
-    beforeEnter: to => {
-      if (!to.query.id) return false;
-    },
-    props: route => ({ id: route.query.id, pwd: route.query.pwd }),
+    children: [{ path: ':id', component: () => import('pages/Call.vue') }],
   },
+
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404.vue'),
+    component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
 

@@ -1,45 +1,43 @@
-# chatio
+# chatio (chatio)
 
-A peer-to-peer audio/video PWA.
+A P2P Audio/Video PWA
 
-## Table of Contents
+## Install the dependencies
 
-* [Getting Started](#getting-started)
-* [Security](#security)
-* [Contributing](#contributing)
-  * [Development](#development)
-  * [Commit Standards](#commit-standards)
-
-## Getting Started
-
-`chatio` is currently completely browser based which means you'll need an internet connection to use it for the first time. After that, it will be saved to your device and be used on any local network your connected to so long a signaling server is in reach.
-
-## Security
-
-All peer traffic is encrypted and there is work under way for making `chatio` calls more secure.
-
-### Development
-
-#### Installing
 ```bash
 yarn
+# or
+npm install
 ```
 
-#### Dev server
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+
 ```bash
-quasar dev
+yarn dev
 ```
 
-#### Linting
+### Lint the files
+
 ```bash
-yarn run lint
+yarn lint
+# or
+npm run lint
 ```
 
-#### Build in production mode
+### Format the files
+
 ```bash
-quasar build
+yarn format
+# or
+npm run format
 ```
 
-### Commit Standards
-`chatio` follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) spec in order
-to have clear and concise messages, as well as, an auto-generated changelog using [standard-version](https://github.com/conventional-changelog/standard-version).
+### Build the app for production
+
+```bash
+yarn build
+```
+
+### Customize the configuration
+
+See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).
