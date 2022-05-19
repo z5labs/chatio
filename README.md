@@ -1,45 +1,39 @@
 # chatio
 
-A peer-to-peer audio/video PWA.
+A peer-to-peer audio/video progressive web application desgined for mobile, desktop, and tablets.
 
 ## Table of Contents
 
-* [Getting Started](#getting-started)
-* [Security](#security)
-* [Contributing](#contributing)
-  * [Development](#development)
-  * [Commit Standards](#commit-standards)
+- [Getting Started](#getting-started)
+  - [In a Call](#in-a-call)
+- [Technical Details](#technical-details)
+  - [Trust](#trust)
+  - [Message Specification](#message-specification)
+  - [Audio/Video Transmission](#audio/video-transmission)
 
 ## Getting Started
 
-`chatio` is currently completely browser based which means you'll need an internet connection to use it for the first time. After that, it will be saved to your device and be used on any local network your connected to so long a signaling server is in reach.
+To begin, simply navigate to [https://z5labs.github.io/chatio](https://z5labs.github.io/chatio) where you
+will be presented with the home page of **chatio**. From there you can start
+a new call with the simple tap of a button.
 
-## Security
+### In a Call
 
-All peer traffic is encrypted and there is work under way for making `chatio` calls more secure.
+_TODO_
 
-### Development
+## Technical Details
 
-#### Installing
-```bash
-yarn
-```
+**chatio** is built on [libp2p](https://libp2p.io), a modular peer-to-peer network
+stack, which powers many other decentralized networks including [Ethereum](https://ethereum.org).
 
-#### Dev server
-```bash
-quasar dev
-```
+### Trust
 
-#### Linting
-```bash
-yarn run lint
-```
+_TODO_
 
-#### Build in production mode
-```bash
-quasar build
-```
+### Message Specification
 
-### Commit Standards
-`chatio` follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) spec in order
-to have clear and concise messages, as well as, an auto-generated changelog using [standard-version](https://github.com/conventional-changelog/standard-version).
+_TODO_
+
+### Audio/Video Transmission
+
+_TODO_

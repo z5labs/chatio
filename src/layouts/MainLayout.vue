@@ -2,39 +2,18 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title>
-          chatio
-        </q-toolbar-title>
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          :aria-label="$t('main.menu.ariaLabel')"
+          @click="toggleLeftDrawer"
+        />
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title> chatio </q-toolbar-title>
 
-        <q-btn-dropdown icon="settings" flat>
-          <div class="row no-wrap q-pa-md">
-            <div class="column">
-              <div class="text-h6 q-mb-md">Settings</div>
-              <q-toggle v-model="mobileData" label="Use Mobile Data" />
-              <q-toggle v-model="bluetooth" label="Bluetooth" />
-            </div>
-
-            <q-separator vertical inset class="q-mx-lg" />
-
-            <div class="column items-center">
-              <q-avatar size="72px">
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-              </q-avatar>
-
-              <div class="text-subtitle1 q-mt-md q-mb-xs">John Doe</div>
-
-              <q-btn
-                color="primary"
-                label="Logout"
-                push
-                size="sm"
-                v-close-popup
-              />
-            </div>
-          </div>
-        </q-btn-dropdown>
+        <div>chatio v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -45,12 +24,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue';
+import { useGlobalSettingsStore } from 'src/stores/global-settings-store';
 
 export default defineComponent({
   name: 'MainLayout',
-  setup () {
-    return {}
-  }
-})
+  setup() {
+    const store = useGlobalSettingsStore();
+
+    const leftDrawerOpen = ref(false);
+
+    onMounted(async () => {
+      await store.startLibP2PNode();
+      console.log('successfully started libp2p node');
+    });
+
+    return {
+      leftDrawerOpen,
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
+    };
+  },
+});
 </script>
