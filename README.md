@@ -19,7 +19,7 @@ a new call with the simple tap of a button.
 
 ### In a Call
 
-*TODO*
+_TODO_
 
 ## Technical Details
 
@@ -28,12 +28,12 @@ stack, which powers many other decentralized networks including [Ethereum](https
 
 ### Trust
 
-*TODO*
+_TODO_
 
 ### Message Specification
 
-*TODO*
+_TODO_
 
 ### Audio/Video Transmission
 
-*TODO*
+_TODO_
