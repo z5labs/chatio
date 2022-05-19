@@ -1,43 +1,39 @@
-# chatio (chatio)
+# chatio
 
-A P2P Audio/Video PWA
+A peer-to-peer audio/video progressive web application desgined for mobile, desktop, and tablets.
 
-## Install the dependencies
+## Table of Contents
 
-```bash
-yarn
-# or
-npm install
-```
+- [Getting Started](#getting-started)
+  - [In a Call](#in-a-call)
+- [Technical Details](#technical-details)
+  - [Trust](#trust)
+  - [Message Specification](#message-specification)
+  - [Audio/Video Transmission](#audio/video-transmission)
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+## Getting Started
 
-```bash
-yarn dev
-```
+To begin, simply navigate to [https://z5labs.github.io/chatio](https://z5labs.github.io/chatio) where you
+will be presented with the home page of **chatio**. From there you can start
+a new call with the simple tap of a button.
 
-### Lint the files
+### In a Call
 
-```bash
-yarn lint
-# or
-npm run lint
-```
+*TODO*
 
-### Format the files
+## Technical Details
 
-```bash
-yarn format
-# or
-npm run format
-```
+**chatio** is built on [libp2p](https://libp2p.io), a modular peer-to-peer network
+stack, which powers many other decentralized networks including [Ethereum](https://ethereum.org).
 
-### Build the app for production
+### Trust
 
-```bash
-yarn build
-```
+*TODO*
 
-### Customize the configuration
+### Message Specification
 
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).
+*TODO*
+
+### Audio/Video Transmission
+
+*TODO*
