@@ -7,7 +7,7 @@
           dense
           round
           icon="menu"
-          aria-label="Menu"
+          :aria-label="$t('main.menu.ariaLabel')"
           @click="toggleLeftDrawer"
         />
 

@@ -1,7 +1,7 @@
 <template>
   <q-card flat bordered>
     <q-card-section>
-      <div class="text-h5">Start a Call</div>
+      <div class="text-h5">{{ $t('call.new.formHeader') }}</div>
     </q-card-section>
 
     <q-separator />
@@ -9,8 +9,8 @@
     <q-card-section>
       <q-input
         v-model="callId"
-        label="Call ID"
-        hint="Make it as random as possible"
+        :label="$t('call.id.label')"
+        :hint="$t('call.id.hint')"
         hide-hint
         outlined
       />
@@ -19,7 +19,12 @@
     <q-separator />
 
     <q-card-actions>
-      <q-btn label="Start" @click="emitStart" flat />
+      <q-btn
+        :aria-label="$t('call.start.ariaLabel')"
+        :label="$t('call.start.label')"
+        @click="emitStart"
+        flat
+      />
     </q-card-actions>
   </q-card>
 </template>

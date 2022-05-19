@@ -1,6 +1,6 @@
 <template>
   <q-list separator padding>
-    <q-item-label header>People</q-item-label>
+    <q-item-label header>{{ $t('call.participants.header') }}</q-item-label>
 
     <q-item v-for="participant in participants" :key="participant.peerId">
       <q-item-section>

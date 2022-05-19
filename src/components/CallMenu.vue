@@ -1,6 +1,6 @@
 <template>
   <q-list>
-    <q-item-label header>Call Menu</q-item-label>
+    <q-item-label header>{{ $t('call.menu.header') }}</q-item-label>
   </q-list>
 </template>
 
